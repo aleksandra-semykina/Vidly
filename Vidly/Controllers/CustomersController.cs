@@ -10,27 +10,27 @@ namespace Vidly.Controllers
 {
 	public class CustomersController : Controller
 	{
-        private ApplicationDbContext _context;
+		private ApplicationDbContext _context;
 
-        public CustomersController()
-        {
-            _context = new ApplicationDbContext();
-        }
+		public CustomersController()
+		{
+			_context = new ApplicationDbContext();
+		}
 
-        protected override void Dispose(bool disposing)
-        {
-            _context.Dispose();
-        }
+		protected override void Dispose(bool disposing)
+		{
+			_context.Dispose();
+		}
 
 		public ActionResult Index()
 		{
-            var customers = _context.Customers.Include(x => x.MembershipType).ToList();
+			var customers = _context.Customers.Include(x => x.MembershipType).ToList();
 			return View(customers);
 		}
 
 		public ActionResult Details(int id)
 		{
-			var customer = _context.Customers.SingleOrDefault(l => l.Id == id);
+			var customer = _context.Customers.Include(x => x.MembershipType).SingleOrDefault(l => l.Id == id);
 
 			if (customer == null)
 			{
