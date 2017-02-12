@@ -4,28 +4,36 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Vidly.Models;
+using System.Data.Entity;
 
 namespace Vidly.Controllers
 {
     public class MoviesController : Controller
     {
-        //
-        // GET: /Movies/
+        private ApplicationDbContext _context;
+
+        public MoviesController()
+        {
+            _context = new ApplicationDbContext();
+        }
+
         public ActionResult Index()
         {
-            var movies = GetMovies();
+            var movies = _context.Movies.Include(x => x.Genre);
 
             return View(movies);
         }
-    
-        private List<Movie> GetMovies()
+
+        public ActionResult Details(int id)
         {
-            var movies = new List<Movie>
+            var movie = _context.Movies.Include(x => x.Genre).FirstOrDefault(x => x.Id == id);
+
+            if (movie == null)
             {
-                new Movie { Name = "Shrek!" },
-                new Movie { Name = "Wall-e" }
-            };
-            return movies;
+                return HttpNotFound();
+            }
+
+            return View(movie);
         }
     }
 }
